@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Surprise</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #111;
+        font-family: Arial, sans-serif;
+        transition: background 0.3s ease;
+    }
+
+    /* SIMPLE RED BUTTON */
+    #blastBtn {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: red;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 0 30px red;
+        animation: pulse 1.2s infinite alternate;
+    }
+
+    @keyframes pulse {
+        from { transform: scale(1); box-shadow: 0 0 30px red; }
+        to { transform: scale(1.2); box-shadow: 0 0 60px red; }
+    }
+
+    /* COUNTDOWN */
+    #countdown {
+        display: none;
+        position: absolute;
+        font-size: 120px;
+        color: white;
+        font-weight: bold;
+        animation: pop 1s ease;
+    }
+
+    @keyframes pop {
+        from { transform: scale(0.5); opacity: 0; }
+        to { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* BIRTHDAY CONTENT */
+    #birthday {
+        display: none;
+        position: absolute;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 70px;
+        color: #ffcc00;
+        letter-spacing: 5px;
+        text-shadow:
+            0 0 10px #ffcc00,
+            0 0 40px #ff9900,
+            0 0 100px #ff3300;
+        animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+        from { text-shadow: 0 0 10px #ffcc00, 0 0 40px #ff9900; }
+        to { text-shadow: 0 0 30px #ffcc00, 0 0 120px #ff3300; }
+    }
+
+    /* EMOJI RAIN */
+    .emoji {
+        position: absolute;
+        top: -60px;
+        font-size: 50px;
+        animation: fall linear infinite;
+        opacity: 0.95;
+    }
+
+    @keyframes fall {
+        to { transform: translateY(110vh); }
+    }
+</style>
+</head>
+
+<body>
+
+<button id="blastBtn" onclick="startSequence()"></button>
+
+<div id="countdown"></div>
+
+<div id="birthday">
+    <h1>HAPPY BIRTHDAY</h1>
+</div>
+
+<script>
+    const emojis = ["❤️", "🎂", "🥳"];
+    let count = 3;
+
+    function startSequence() {
+        document.getElementById("blastBtn").style.display = "none";
+        document.getElementById("countdown").style.display = "block";
+        showCount();
+    }
+
+    function showCount() {
+        if (count > 0) {
+            const cd = document.getElementById("countdown");
+            cd.innerText = count;
+            cd.style.animation = "none"; // reset
+            cd.offsetHeight; // trigger reflow
+            cd.style.animation = "pop 1s ease";
+            count--;
+            setTimeout(showCount, 1000);
+        } else {
+            blast();
+        }
+    }
+
+    function blast() {
+        document.getElementById("countdown").style.display = "none";
+        document.body.style.background = "white";
+
+        setTimeout(() => {
+            document.body.style.background = "#111";
+            document.getElementById("birthday").style.display = "block";
+            setInterval(createEmoji, 250);
+        }, 1000);
+    }
+
+    function createEmoji() {
+        const e = document.createElement("div");
+        e.className = "emoji";
+        e.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+        e.style.left = Math.random() * 100 + "vw";
+        e.style.fontSize = (40 + Math.random() * 40) + "px";
+        e.style.animationDuration = (3 + Math.random() * 4) + "s";
+
+        document.body.appendChild(e);
+        setTimeout(() => e.remove(), 8000);
+    }
+</script>
+
+</body>
+</html>
